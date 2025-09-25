@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Gatekeeper Webpage</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      height: 100vh;
+      justify-content: center;
+      align-items: center;
+      background: #f4f4f9;
+      margin: 0;
+    }
+    .container {
+      text-align: center;
+      background: white;
+      padding: 2rem 3rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      max-width: 600px;
+    }
+    h1 {
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+      color: #333;
+    }
+    p {
+      margin-bottom: 2rem;
+      font-size: 1rem;
+      color: #555;
+    }
+    button {
+      padding: 15px 40px;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background: #0073bb;
+      color: white;
+      font-weight: bold;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    }
+    button:hover {
+      background: #005fa3;
+    }
+    .footer {
+      margin-top: 1.5rem;
+      font-size: 0.85rem;
+      color: #777;
+    }
+    .footer a {
+      color: #0073bb;
+      text-decoration: none;
+    }
+    .footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Secured Documentation Access Portal</h1>
+    <p>
+      Click the button below to securely access the HTML documentation.<br>
+      This will generate a temporary, signed access token for your session.
+    </p>
+    <button onclick="window.location.href='/access'">ACCESS DOCUMENTS</button>
+    <div class="footer">
+      Powered by <a href="https://aws.amazon.com/cloudfront/">AWS CloudFront</a>
+    </div>
+  </div>
+</body>
+</html>

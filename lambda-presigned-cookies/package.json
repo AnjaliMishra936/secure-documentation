@@ -1,0 +1,16 @@
+{
+  "name": "lambda-presigned-cookies",
+  "version": "1.0.0",
+  "description": "AWS Lambda to generate CloudFront signed cookies for multi-page access",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.500.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
