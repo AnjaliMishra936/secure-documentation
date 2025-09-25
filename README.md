@@ -9,8 +9,8 @@ Users first access a gatekeeper page with an "Access Documents" button. Clicking
 
 Currently, only the index.html page is visible, and CSS or other static assets are not yet loading properly behind it.
 
-**Project Overview:  
-**The goal of this project is to test a secure setup for serving private documentation. Users first access a gatekeeper page with a button. Clicking the button triggers a backend Lambda function via API Gateway that generates a temporary signed URL or sets presigned cookies. This allows the user to access the documentation for a limited time without implementing a full authentication system.
+**Project Overview:**  
+The goal of this project is to test a secure setup for serving private documentation. Users first access a gatekeeper page with a button. Clicking the button triggers a backend Lambda function via API Gateway that generates a temporary signed URL or sets presigned cookies. This allows the user to access the documentation for a limited time without implementing a full authentication system.
 
 Currently, only index.html is visible, and CSS/other resources are not yet applied.
 
