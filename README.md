@@ -1,95 +1,103 @@
-**Project Name:** Secure CloudFront Documentation Access
+# Secure CloudFront Documentation Access
 
-**Note:** Presigned cookies are planned but not yet implemented. Currently, only presigned URLs are functional.
+> **Status:** Both presigned URLs and presigned cookies are functional with different CloudFront configurations.
 
-**Description:**  
-This project is a proof-of-concept to secure a multi-page static HTML5 documentation site using AWS CloudFront and S3. It ensures that the documentation cannot be accessed directly without a valid signature, providing session-based access via presigned URLs (presigned cookies support is a work-in-progress).
+## Overview
 
-Users first access a gatekeeper page with an "Access Documents" button. Clicking this button triggers a backend process via AWS API Gateway, which invokes a Lambda function that generates a temporary signed access token for CloudFront. The user is then redirected to the documentation for a limited time.
+A proof-of-concept for securing multi-page static HTML5 documentation using AWS CloudFront and S3. The system prevents direct access without valid signatures, providing session-based access through a gatekeeper interface.
 
-Currently, only the index.html page is visible, and CSS or other static assets are not yet loading properly behind it.
+## Features
 
-**Project Overview:**  
-The goal of this project is to test a secure setup for serving private documentation. Users first access a gatekeeper page with a button. Clicking the button triggers a backend Lambda function via API Gateway that generates a temporary signed URL or sets presigned cookies. This allows the user to access the documentation for a limited time without implementing a full authentication system.
+- ✅ Secure static HTML5 documentation on S3
+- ✅ Private S3 bucket with CloudFront Origin Access Control
+- ✅ Gatekeeper page with access button
+- ✅ Lambda function generates presigned URLs/cookies via API Gateway
+- ✅ Temporary access with automatic expiration
+- ✅ Direct access blocked (403 Forbidden)
+- ✅ Both presigned URLs and cookies supported
+- ✅ Full multi-page navigation supported
 
-Currently, only index.html is visible, and CSS/other resources are not yet applied.
+## Architecture
 
-**Features:**
+```
+User → Gatekeeper Page → API Gateway → Lambda Function → Presigned URL/Cookies → CloudFront → S3 Bucket
+```
 
-Secure multi-page static HTML5 documentation hosted on S3
+## Configuration Options
 
-Private S3 bucket accessible only via CloudFront using Origin Access Control
+### Presigned URLs
+- **Use Case:** Single-page access or specific resource access
+- **CloudFront Setting:** Enable "Trusted Signers" or "Trusted Key Groups"
+- **Lambda Response:** Returns signed URL with expiration
+- **Limitation:** Each resource needs individual signing
+- **Best For:** Direct file access, API endpoints, single resources
 
-Gatekeeper page with "Access Documents" button
+### Presigned Cookies
+- **Use Case:** Multi-page navigation with shared access
+- **CloudFront Setting:** Enable "Trusted Signers" with cookie-based policies
+- **Lambda Response:** Sets signed cookies in browser
+- **Advantage:** Single authentication for entire site navigation
+- **Best For:** Multi-page websites, seamless navigation, static sites
 
-Backend Lambda function generates **presigned URLs** (presigned cookies not yet working; under development) via API Gateway
+## Setup
 
-Temporary access with automatic expiration
+1. **Clone repository**
+   ```bash
+   git clone <repository-url>
+   ```
 
-Full navigation through documentation while signature is valid
+2. **Upload documentation to private S3 bucket**
 
-Direct access blocked (403 Forbidden) for unauthorized requests
+3. **Configure CloudFront Distribution**
+   - Enable Origin Access Control (OAC)
+   - Point to private S3 bucket
+   - Configure Trusted Key Groups for signing
+   - **For URLs:** Standard behavior configuration
+   - **For Cookies:** Enable cookie forwarding and cache policies
 
-**Currently only index.html is visible; CSS and other static assets are not yet loaded**
+4. **Deploy Lambda function**
+   - Set up API Gateway trigger
+   - Configure environment variables:
+     ```
+     CF_DOMAIN=your-cloudfront-domain
+     CLOUDFRONT_KEY_PAIR_ID=your-key-pair-id
+     CLOUDFRONT_KEY_BUCKET=your-s3-bucket
+     CLOUDFRONT_KEY_OBJECT=your-private-key-file
+     ```
 
-**Architecture:**  
-User → Gatekeeper Page (HTML) → API Gateway **→** Lambda Function → Generates Presigned URL or Cookies → Redirects User → CloudFront Distribution → S3 Bucket (Private HTML Documentation)
+5. **Deploy gatekeeper page** to public location
 
-**Setup and Installation:**
+## Usage
 
-Clone the repository
+1. Open the gatekeeper page in browser
+2. Click "Access Documents" button
+3. Lambda generates temporary presigned URL or sets cookies
+4. Redirect to `index.html` of documentation
+5. Access expires after configured time limit
 
-Upload HTML documentation to a private S3 bucket.
+**Current Behavior:**
+- ✅ Successful access to documentation
+- ✅ Both URL and cookie signing methods work
+- ✅ Full multi-page navigation functional
+- ✅ CSS and static assets loading properly
+- ✅ Access expiration works correctly
 
-**Configure CloudFront:**
+## Acceptance Criteria
 
-Use Origin Access Control (OAC) to restrict S3 access.
+| Requirement | Status | Notes |
+|-------------|--------|---------|
+| Direct access blocked | ✅ | 403 Forbidden without signature |
+| Private S3 bucket | ✅ | Only CloudFront OAC access |
+| Gatekeeper page | ✅ | Single button interface |
+| Token generation | ✅ | Lambda via API Gateway |
+| Successful redirection | ✅ | Redirects to `index.html` |
+| Full site access | ✅ | Complete site navigation |
+| Access expiration | ✅ | 403 after expiration |
+| CSS/Assets loading | ✅ | All resources accessible |
 
-Point the distribution to your private S3 bucket.
+## Next Steps
 
-Enable signed URLs or signed cookies.
-
-Deploy the Lambda function via API Gateway that generates presigned URLs or cookies.
-**Set environment variables:**  
-CF_DOMAIN = your-cloudfront-domain  
-CLOUDFRONT_KEY_PAIR_ID = your-key-pair-id  
-CLOUDFRONT_KEY_BUCKET = your-s3-bucket  
-CLOUDFRONT_KEY_OBJECT = your-private-key-file
-
-Deploy the gatekeeper page (HTML with "Access Documents" button) to a public location (S3 or CloudFront).
-
-**Usage:**
-
-Open the gatekeeper page in a browser.
-
-Click the "Access Documents" button.
-
-The Lambda function currently generates a **temporary presigned URL**.
-
-**Presigned cookies functionality is not implemented yet** and will be added in future updates.
-
-The user is redirected to index.html of the documentation.
-
-Currently, only index.html is visible; CSS and other static assets are not applied.
-
-Navigate through the documentation freely until the signature expires.
-
-After expiration, any attempt to reload or access pages results in 403 Forbidden.
-
-**Acceptance Criteria:**
-
-**Direct Access Blocked:** Direct CloudFront URL access without a valid signature results in 403 Forbidden.
-
-**Private S3 Bucket:** Only CloudFront OAC can access HTML files.
-
-**Gatekeeper Page Exists:** Single button to initiate access.
-
-**Token Generation:** Backend Lambda via API Gateway generates presigned URL or cookies on click.
-
-**Successful Redirection:** Users redirected to main index.html.
-
-**Full Site Access:** Users can navigate all pages while signature is valid.
-
-**Access Expiration:** After presigned URL/cookie expires, any reload or access attempt results in 403 Forbidden.
-
-Currently, only index.html is visible; CSS and other static assets are not yet loaded.
+- [ ] Optimize cookie vs URL configuration based on use case
+- [ ] Add error handling and user feedback
+- [ ] Performance optimization for large documentation sites
+- [ ] Add monitoring and analytics
